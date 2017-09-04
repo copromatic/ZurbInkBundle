@@ -26,14 +26,14 @@ class InlineCssNode extends Twig_Node
             ->subcompile($this->getNode('html'))
             ->write('$zurbCss = "";')
             ->write('foreach($context["zurb_ink_styles"] as $cssFile){')
-            ->write('$path = $context["zurb_ink_locator"]->locate($cssFile);')
+            ->write('if(strpos($cssFile, \'http\') === false){$path = $context["zurb_ink_locator"]->locate($cssFile);')
             ->write('if($path){$zurbCss .= "\n".file_get_contents($path);}')
+            ->write('}else{$zurbCss .= "\n".file_get_contents($cssFile);}')
             ->write('}')
             ->write('$context["zurb_ink_inlinecss"]->setHtml(ob_get_clean());')
             ->write('$context["zurb_ink_inlinecss"]->setCSS($zurbCss);')
             ->write('echo $context["zurb_ink_inlinecss"]->convert();')
             ->write('$context["zurb_ink_styles"]->removeAll();')
         ;
-
     }
 }
